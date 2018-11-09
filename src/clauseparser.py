@@ -9,14 +9,19 @@ from variable import Variable
 class ClauseParser(NamedTuple):
     negateCharacter: str = "/"
     orSplitter: str = " OR "
+    andSplitter: str = " AND "
+
+    def parse_clauses_list(self, clauses_list):
+        return list(map(self.parse_clause, clauses_list))
 
     def parse_clause(self, input_string: str):
         literals_list = input_string.split(self.orSplitter)
         parsed_literals = list(map(self.parse_literal, literals_list))
-        return Clause(parsed_literals)
+        return Clause(parsed_literals, False)
 
     def parse_literal(self, input_string):
         negated = input_string[0] == self.negateCharacter
+
         if negated:
             input_string = input_string[1:]
 
@@ -33,3 +38,15 @@ class ClauseParser(NamedTuple):
             return Constant(input_string[0], None)
 
         return Variable(input_string[0], None)
+
+    @staticmethod
+    def get_matching_brackets(input_string):
+        brackets_stack = []
+        brackets_dictionary = {}
+        for i, c in enumerate(input_string):
+            if c == '(':
+                brackets_stack.append(i)
+            if c == ')':
+                    brackets_dictionary[brackets_stack.pop()] = i
+
+        return brackets_dictionary
