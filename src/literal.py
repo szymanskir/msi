@@ -1,12 +1,12 @@
-from typing import NamedTuple, List
+from typing import NamedTuple, List, Tuple
 
 from constant import Constant
 from variable import Variable
-from argument import Argument, is_constant
+from argument import Argument
 
 class Literal(NamedTuple):
     isNegated: bool
-    arguments: List[Argument]
+    arguments: Tuple[Argument]
     name: str
 
     @property
@@ -19,19 +19,31 @@ class Literal(NamedTuple):
 
 
 def negate_literal(literal: Literal) -> Literal:
-    return Literal(not literal.isNegated, literal.arguments.copy(), literal.name)
+    return Literal(not literal.isNegated, literal.arguments, literal.name)
 
 def substitute_literal(literal: Literal, from_argument: str, to_argument: str) -> Literal:
     def subtitute_argument(argument, from_argument, to_argument):
-        argument.
-    return Literal(literal.isNegated, map(literal.arguments, literal.name)
+        return to_argument if argument == from_argument else argument
+    return Literal(literal.isNegated, map(subtitute_argument, literal.arguments))
 
-def find_transformation(literal1: Literal, litral2:Literal):
+
+def find_transformation(literal1: Literal, literal2:Literal):
     transformation = dict()
-    for arg1, arg2, in zip(literal1, literal2):
-        if is_constant(arg1) and is_constant(arg2):
-            return None
-        elif is_constant(arg1) and not is_constant(arg2):
-            transformation[arg2] = arg1
-        else is_constant(arg1)
+    for idx in range(0, literal1.arguments.count):
+        if literal1.arguments[idx].value != literal2.arguments[idx].value:
+            if literal1.arguments[idx].is_constant and literal2.argument[idx].is_constant:
+                return None
+            elif literal1.arguments[idx].is_constant:
+                replaced_variable = literal2.arguments[idx]
+                value = literal1.arguments[idx]
+            elif literal2.arguments[idx].is_constant:
+                replaced_variable = literal1.arguments[idx]
+                value = literal2.arguments[idx]
+            else:
+                replaced_variable = literal1.arguments[idx]
+                value = literal2.arguments[idx]
+            transformation[replaced_variable] = value
+            literal1 = substitute_literal(literal1, replaced_variable, value)
+            literal2 = substitute_literal(literal2, replaced_variable, value)
+    return transformation
         
