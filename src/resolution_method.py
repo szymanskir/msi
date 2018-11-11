@@ -1,8 +1,8 @@
-from typing import Set 
 from itertools import combinations
+from typing import Set
 
-from .literal import find_transformation
 from .clause import Clause, negate_clause, subsitute, combine
+from .literal import find_transformation
 
 
 def resolution(knowledge_base: Set[Clause], thesis: Clause) -> bool:

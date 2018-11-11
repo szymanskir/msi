@@ -1,11 +1,11 @@
-from typing import NamedTuple, FrozenSet, List, Dict, Set
+from typing import NamedTuple, FrozenSet, Dict, Set
 
 from .argument import Argument
 from .literal import Literal, negate_literal, substitute_literal
 
 
 class Clause(NamedTuple):
-    literals: FrozenSet[Literal] 
+    literals: FrozenSet[Literal]
 
 
 def negate_clause(clause: Clause) -> FrozenSet[Clause]:

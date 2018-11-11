@@ -1,13 +1,14 @@
-from typing import NamedTuple, List, Tuple, Dict
+from typing import NamedTuple, Tuple, Dict
 
 from .argument import Argument
+
 
 class Literal(NamedTuple):
     """Class representing a single literal.
     """
     is_negated: bool = False
     arguments: Tuple[Argument, ...] = (Argument('X', True),)
-    name: str = "literal" 
+    name: str = "literal"
 
 
 def negate_literal(literal: Literal) -> Literal:
@@ -60,4 +61,3 @@ def find_transformation(literal1: Literal, literal2: Literal) -> Dict[Argument, 
             literal1 = substitute_literal(literal1, replaced_variable, value)
             literal2 = substitute_literal(literal2, replaced_variable, value)
     return transformation
-        

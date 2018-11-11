@@ -8,4 +8,4 @@ POSIADA(Janek,x) AND [KOT(x) OR PIES(x))]
 
 clause_parser = ClauseParser()
 parsed_clauses = clause_parser.parse_cnf_list(input_string.split("\n"))
-print('\n'.join(' '.join(map(str,sl)) for sl in parsed_clauses))
+print('\n'.join(' '.join(map(str, sl)) for sl in parsed_clauses))
