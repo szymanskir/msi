@@ -6,9 +6,8 @@ from argument import Argument
 
 class Literal(NamedTuple):
     isNegated: bool
-    arguments: Tuple[Argument]
-    name: str
-
+    arguments: Tuple[Argument] = tuple()
+    name: str = ''
     @property
     def get_variables(self):
         return list(filter(lambda elm: isinstance(elm, Variable), self.arguments))
@@ -21,17 +20,25 @@ class Literal(NamedTuple):
 def negate_literal(literal: Literal) -> Literal:
     return Literal(not literal.isNegated, literal.arguments, literal.name)
 
-def substitute_literal(literal: Literal, from_argument: str, to_argument: str) -> Literal:
-    def subtitute_argument(argument, from_argument, to_argument):
-        return to_argument if argument == from_argument else argument
-    return Literal(literal.isNegated, map(subtitute_argument, literal.arguments))
+
+def substitute_argument(argument, from_argument, to_argument):
+    return to_argument if argument == from_argument else argument
 
 
-def find_transformation(literal1: Literal, literal2:Literal):
+def substitute_literal(literal: Literal,
+                       from_argument: Argument,
+                       to_argument: Argument) -> Literal:
+
+    arguments = tuple([substitute_argument(arg, from_argument, to_argument)
+                                       for arg in literal.arguments])
+    return Literal(literal.isNegated, arguments, literal.name)
+
+
+def find_transformation(literal1: Literal, literal2: Literal):
     transformation = dict()
-    for idx in range(0, literal1.arguments.count):
+    for idx in range(0, len(literal1.arguments)):
         if literal1.arguments[idx].value != literal2.arguments[idx].value:
-            if literal1.arguments[idx].is_constant and literal2.argument[idx].is_constant:
+            if literal1.arguments[idx].is_constant and literal2.arguments[idx].is_constant:
                 return None
             elif literal1.arguments[idx].is_constant:
                 replaced_variable = literal2.arguments[idx]

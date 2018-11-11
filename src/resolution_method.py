@@ -17,6 +17,7 @@ def resolution(knowledge_base: List[Clause], thesis: Clause) -> bool:
             return False
         clauses += new
 
+
 def resolve(clause_i: Clause, clause_j: Clause) -> List[Clause]:
     resolvents: List[Clause] = list()
     for literal_i in clause_i.literals:
@@ -28,5 +29,5 @@ def resolve(clause_i: Clause, clause_j: Clause) -> List[Clause]:
                 else:
                     new_clause_i = subsitute(clause_i, transformation)
                     new_clause_j = subsitute(clause_j, transformation)
-                    resolvents += combine(new_clause_i, new_clause_j)
+                    resolvents += (combine(new_clause_i, new_clause_j),)
     return resolvents
