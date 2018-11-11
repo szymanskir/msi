@@ -1,6 +1,6 @@
-from typing import NamedTuple
-from operator import add
 from functools import reduce
+from operator import add
+from typing import NamedTuple
 
 from .clause import Clause
 from .constant import Constant
