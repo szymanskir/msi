@@ -10,7 +10,7 @@ def resolution(knowledge_base: List[Clause], thesis: Clause) -> bool:
         new: List[Clause] = list()
         for ci, cj in combinations(clauses, 2):
             resolvents: List[Clause] = resolve(ci, cj)
-            if None in resolvents:
+            if Clause(tuple())in resolvents:
                 return True
             new += resolvents
         if set(new) < set(clauses):
