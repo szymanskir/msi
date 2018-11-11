@@ -2,10 +2,10 @@ import pytest
 
 from typing import Set
 
-from resolution_method import *
-from clause import Clause 
-from argument import Argument
-from literal import Literal
+from src.resolution_method import *
+from src.clause import Clause 
+from src.argument import Argument
+from src.literal import Literal
 
 
 @pytest.mark.parametrize("clause_i, clause_j, expected_result", [

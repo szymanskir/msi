@@ -1,6 +1,6 @@
 from typing import NamedTuple, List, Tuple, Dict
 
-from argument import Argument
+from .argument import Argument
 
 class Literal(NamedTuple):
     """Class representing a single literal.

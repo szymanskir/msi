@@ -1,6 +1,7 @@
-from clause import *
-from argument import Argument
 import pytest
+
+from src.clause import *
+from src.argument import Argument
 
 
 @pytest.mark.parametrize("clause, expected_result", [

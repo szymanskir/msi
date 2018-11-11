@@ -1,7 +1,7 @@
 from typing import NamedTuple, FrozenSet, List, Dict, Set
 
-from argument import Argument
-from literal import Literal, negate_literal, substitute_literal
+from .argument import Argument
+from .literal import Literal, negate_literal, substitute_literal
 
 
 class Clause(NamedTuple):

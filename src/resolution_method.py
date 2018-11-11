@@ -1,7 +1,9 @@
 from typing import Set 
-from clause import Clause, negate_clause, subsitute, combine
 from itertools import combinations
-from literal import find_transformation
+
+from .literal import find_transformation
+from .clause import Clause, negate_clause, subsitute, combine
+
 
 def resolution(knowledge_base: Set[Clause], thesis: Clause) -> bool:
     """Performs a resolution proof for a given knowledge_base and thesis.

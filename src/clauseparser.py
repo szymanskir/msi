@@ -2,10 +2,10 @@ from typing import NamedTuple
 from operator import add
 from functools import reduce
 
-from clause import Clause
-from constant import Constant
-from literal import Literal
-from variable import Variable
+from .clause import Clause
+from .constant import Constant
+from .literal import Literal
+from .variable import Variable
 
 
 class ClauseParser(NamedTuple):

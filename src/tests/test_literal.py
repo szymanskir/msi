@@ -1,5 +1,6 @@
-from literal import *
 import pytest
+
+from src.literal import *
 
 
 @pytest.mark.parametrize("literal, expected_result", [
