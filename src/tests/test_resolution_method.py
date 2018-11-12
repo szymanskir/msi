@@ -5,7 +5,6 @@ from src.clause import Clause
 from src.literal import Literal
 from src.resolution_method import *
 
-
 @pytest.mark.parametrize("clause_i, clause_j, expected_result", [
     (
             Clause(
@@ -91,5 +90,5 @@ def test_resolve(clause_i: Clause, clause_j: Clause, expected_result: Set[Clause
     )
 ])
 def test_resolution(knowledge_base: Set[Clause], thesis: Clause, expected_result: bool):
-    result = resolution(knowledge_base, thesis)
+    result, _ = resolution(knowledge_base, thesis)
     assert result == expected_result

@@ -1,25 +1,38 @@
 from itertools import combinations
-from typing import Set
+from typing import Set, Tuple
+import networkx as nx
+import matplotlib.pyplot as plt
+from networkx.drawing.nx_agraph import write_dot, graphviz_layout
 
 from .clause import Clause, negate_clause, subsitute, combine
 from .literal import find_transformation
 
 
-def resolution(knowledge_base: Set[Clause], thesis: Clause) -> bool:
+def resolution(knowledge_base: Set[Clause], thesis: Clause) -> Tuple[bool, nx.classes.DiGraph]:
     """Performs a resolution proof for a given knowledge_base and thesis.
     """
     clauses: Set[Clause] = knowledge_base | negate_clause(thesis)
     empty_clause: Clause = Clause(frozenset())
+    resolution_tree = nx.DiGraph()
+
+    resolution_tree.add_nodes_from(clauses)
 
     while True:
         new: Set[Clause] = set()
         for ci, cj in combinations(clauses, 2):
             resolvents: Set[Clause] = resolve(ci, cj)
+            resolution_tree.add_nodes_from(resolvents)
+            resolution_tree.add_edges_from([(ci, r) for r in resolvents])
+            resolution_tree.add_edges_from([(cj, r) for r in resolvents])
             if empty_clause in resolvents:
-                return True
+                resolution_tree = reduce_resolution_tree(resolution_tree)
+                pos = graphviz_layout(resolution_tree, prog='dot')
+                nx.draw(resolution_tree, pos, with_labels=False, arrows=True)
+                plt.show()
+                return (True, resolution_tree)
             new |= resolvents
         if new < clauses:
-            return False
+            return (False, resolution_tree)
         clauses |= new
 
 
@@ -39,3 +52,13 @@ def resolve(clause_i: Clause, clause_j: Clause) -> Set[Clause]:
                     resolvents.add(combine(new_clause_i, new_clause_j))
 
     return resolvents
+
+def reduce_resolution_tree(resolution_tree: nx.classes.DiGraph):
+    empty_clause: Clause = Clause(frozenset())
+    change = True
+    while change:
+        change = False
+        nodes_to_delete = [v for v in resolution_tree.nodes() if resolution_tree.out_degree(v) == 0 and v != empty_clause]
+        change = len(nodes_to_delete) > 0
+        resolution_tree.remove_nodes_from(nodes_to_delete)
+    return resolution_tree
