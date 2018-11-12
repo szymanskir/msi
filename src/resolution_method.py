@@ -27,7 +27,7 @@ def resolution(knowledge_base: Set[Clause], thesis: Clause) -> Tuple[bool, nx.cl
             if empty_clause in resolvents:
                 resolution_tree = reduce_resolution_tree(resolution_tree)
                 pos = graphviz_layout(resolution_tree, prog='dot')
-                nx.draw(resolution_tree, pos, with_labels=False, arrows=True)
+                nx.draw(resolution_tree, pos, with_labels=True, arrows=True)
                 plt.show()
                 return (True, resolution_tree)
             new |= resolvents
