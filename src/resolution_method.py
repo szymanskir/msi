@@ -23,15 +23,11 @@ def resolution(knowledge_base: Set[Clause], thesis: Set[Clause]) -> Tuple[bool, 
     while True:
         new: Set[Clause] = set()
         for ci, cj in combinations(clauses, 2):
-            resolvents: Set[Clause] = resolve(ci, cj)
+            resolvents: Set[Clause] = resolve(ci, cj, resolution_tree)
             resolution_tree.add_nodes_from(resolvents)
-            resolution_tree.add_edges_from([(ci, r) for r in resolvents])
-            resolution_tree.add_edges_from([(cj, r) for r in resolvents])
             if empty_clause in resolvents:
                 resolution_tree = reduce_resolution_tree(resolution_tree)
-                pos = graphviz_layout(resolution_tree, prog='dot')
-                nx.draw(resolution_tree, pos, with_labels=True, arrows=True)
-                plt.show()
+                draw_resolution_tree(resolution_tree)
                 return (True, resolution_tree)
             new |= resolvents
         if new < clauses:
@@ -39,7 +35,7 @@ def resolution(knowledge_base: Set[Clause], thesis: Set[Clause]) -> Tuple[bool, 
         clauses |= new
 
 
-def resolve(clause_i: Clause, clause_j: Clause) -> Set[Clause]:
+def resolve(clause_i: Clause, clause_j: Clause, resolution_tree) -> Set[Clause]:
     """Finds all resolvents for the given pair of clauses.
     """
     resolvents: Set[Clause] = set()
@@ -52,9 +48,27 @@ def resolve(clause_i: Clause, clause_j: Clause) -> Set[Clause]:
                 else:
                     new_clause_i = subsitute(clause_i, transformation)
                     new_clause_j = subsitute(clause_j, transformation)
-                    resolvents.add(combine(new_clause_i, new_clause_j))
+
+                    comb = combine(new_clause_i, new_clause_j)
+                    trans_str = _get_transformation_string_(transformation)
+                    resolution_tree.add_edge(
+                        clause_i, comb, subst=trans_str)
+                    resolution_tree.add_edge(
+                        clause_j, comb, subst=trans_str)
+
+                    resolvents.add(comb)
 
     return resolvents
+
+
+def _get_transformation_string_(transformation):
+    if len(transformation) == 0:
+        return ""
+
+    pairs = [f"{variable}: {value}" for variable,
+             value in transformation.items()]
+    trans_str = ', '.join(pairs)
+    return f"{{{trans_str}}}"
 
 
 def reduce_resolution_tree(resolution_tree: nx.classes.DiGraph):
@@ -62,7 +76,39 @@ def reduce_resolution_tree(resolution_tree: nx.classes.DiGraph):
     change = True
     while change:
         change = False
-        nodes_to_delete = [v for v in resolution_tree.nodes() if resolution_tree.out_degree(v) == 0 and v != empty_clause]
+        nodes_to_delete = [v for v in resolution_tree.nodes(
+        ) if resolution_tree.out_degree(v) == 0 and v != empty_clause]
         change = len(nodes_to_delete) > 0
         resolution_tree.remove_nodes_from(nodes_to_delete)
     return resolution_tree
+
+
+def draw_resolution_tree(tree, enable_edge_labels=True):
+    plt.figure()
+
+    # graph
+    nodes_pos = graphviz_layout(tree, prog='dot')
+    nx.draw(tree, nodes_pos,
+            node_size=150, edge_color='#7d7d7d')
+
+    # nodes labels
+    pos_attrs = {}
+    for node, coords in nodes_pos.items():
+        pos_attrs[node] = (coords[0], coords[1] - 6)
+
+    custom_node_attrs = {}
+    for node, attr in tree.nodes.items():
+        custom_node_attrs[node] = str(node)
+
+    nodes_bbox = dict(fc="w", lw=0.1)
+    nx.draw_networkx_labels(
+        tree, pos_attrs, labels=custom_node_attrs, font_size=10, bbox=nodes_bbox)
+
+    # edge labels
+    if(enable_edge_labels):
+        edges_pos = graphviz_layout(tree, prog='dot')
+        edge_labels = nx.get_edge_attributes(tree, 'subst')
+        nx.draw_networkx_edge_labels(
+            tree, pos=edges_pos, edge_labels=edge_labels, font_size=10)
+
+    plt.show()
