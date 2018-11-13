@@ -10,10 +10,16 @@ class Literal(NamedTuple):
     arguments: Tuple[Argument, ...] = (Argument('X', True),)
     name: str = "literal"
 
+    def __repr__(self):
+        literal_rep = '~' if self.is_negated else ''
+        literal_rep += self.name
+        literal_rep += f"({', '.join([str(x) for x in self.arguments])})"
+        return literal_rep
+
 
 def negate_literal(literal: Literal) -> Literal:
     """Negates a literal.
-    
+
     Example: L(x) -> ~L(x)
     """
     return Literal(not literal.is_negated, literal.arguments, literal.name)
@@ -40,7 +46,7 @@ def substitute_literal(literal: Literal,
 def find_transformation(literal1: Literal, literal2: Literal) -> Dict[Argument, Argument]:
     """Finds the transformation between literals in order to perform unification. If such
     a transformation does not exist then None is returned.
-    
+
     Example: (L(X), L(a)) -> (X -> a)
     """
     transformation = dict()

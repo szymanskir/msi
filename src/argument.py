@@ -6,3 +6,6 @@ class Argument(NamedTuple):
     """
     value: str = None
     is_constant: bool = False
+
+    def __repr__(self):
+        return str(self.value)

@@ -7,19 +7,26 @@ from .literal import Literal, negate_literal, substitute_literal
 class Clause(NamedTuple):
     literals: FrozenSet[Literal]
 
+    def __repr__(self):
+        if(not self.literals):
+            return "empty"
+
+        return ' v '.join([str(x) for x in self.literals])
+
 
 def negate_clause(clause: Clause) -> FrozenSet[Clause]:
     """Negates a clause and returns a set of clauses.
 
     Example: A | B | C -> {~A, ~B, ~C}
     """
-    negated_literals = [[negate_literal(literal)] for literal in clause.literals]
+    negated_literals = [[negate_literal(literal)]
+                        for literal in clause.literals]
     return frozenset([Clause(frozenset(l)) for l in negated_literals])
 
 
 def subsitute(clause: Clause, transformation: Dict[Argument, Argument]) -> Clause:
     """Applies given transformations to the clause.
-    
+
     Example: X -> a for P(X) will result in P(a)
     """
     for t in transformation:
