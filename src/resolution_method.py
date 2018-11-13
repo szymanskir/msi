@@ -50,11 +50,12 @@ def resolve(clause_i: Clause, clause_j: Clause, resolution_tree) -> Set[Clause]:
                     new_clause_j = subsitute(clause_j, transformation)
 
                     comb = combine(new_clause_i, new_clause_j)
-                    trans_str = _get_transformation_string_(transformation)
-                    resolution_tree.add_edge(
-                        clause_i, comb, subst=trans_str)
-                    resolution_tree.add_edge(
-                        clause_j, comb, subst=trans_str)
+                    if not resolution_tree.has_node(comb):
+                        trans_str = _get_transformation_string_(transformation)
+                        resolution_tree.add_edge(
+                            clause_i, comb, subst=trans_str)
+                        resolution_tree.add_edge(
+                            clause_j, comb, subst=trans_str)
 
                     resolvents.add(comb)
 
