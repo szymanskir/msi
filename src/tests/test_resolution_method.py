@@ -103,7 +103,7 @@ def test_resolution(knowledge_base: Set[Clause], thesis: Clause, expected_result
          "/POSIADA(x,y) OR /KOT(y) OR /POSIADA(x,z) OR /MYSZ(z)",
          "/KIEPSKO_SYPIA(x) OR /POSIADA(x,y) OR /WYJE(y)",
          "POSIADA(Janek,x) AND [KOT(x) OR PIES(x))]"],
-        "/KIEPSKO_SYPIA(Janek) AND POSIADA(Janek,z) AND MYSZ(z)",
+        "KIEPSKO_SYPIA(Janek) AND POSIADA(Janek,z) AND MYSZ(z)",
         False
     ]
 ])
