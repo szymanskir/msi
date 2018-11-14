@@ -8,10 +8,13 @@ from .clause import Clause, negate_clause, subsitute, combine
 from .literal import find_transformation
 
 
-def resolution(knowledge_base: Set[Clause], thesis: Clause) -> Tuple[bool, nx.classes.DiGraph]:
+def resolution(knowledge_base: Set[Clause], thesis: Set[Clause]) -> Tuple[bool, nx.classes.DiGraph]:
     """Performs a resolution proof for a given knowledge_base and thesis.
+
+    Important: All of the arguments: the knowledge_base and the thesis are
+               given in clause form. The thesis is already negated.
     """
-    clauses: Set[Clause] = knowledge_base | negate_clause(thesis)
+    clauses: Set[Clause] = knowledge_base | thesis
     empty_clause: Clause = Clause(frozenset())
     resolution_tree = nx.DiGraph()
 

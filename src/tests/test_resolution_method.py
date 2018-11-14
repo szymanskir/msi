@@ -80,11 +80,13 @@ def test_resolve(clause_i: Clause, clause_j: Clause, expected_result: Set[Clause
                 ),
             },
 
-            Clause(
-                frozenset([
-                    Literal(False, (Argument('John', True),), 'happy'),
-                ])
-            ),
+            {
+                Clause(
+                    frozenset([
+                        Literal(True, (Argument('John', True),), 'happy'),
+                    ])
+                )
+            },
 
             True
     )
