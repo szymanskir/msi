@@ -3,10 +3,8 @@ from operator import add
 from typing import NamedTuple
 
 from .clause import Clause
-from .constant import Constant
 from .literal import Literal
-from .variable import Variable
-
+from .argument import Argument
 
 class ClauseParser(NamedTuple):
     negate_marker: str = "/"
@@ -18,16 +16,16 @@ class ClauseParser(NamedTuple):
     clause_close_bracket = "]"
 
     def parse_cnf_list(self, clauses_list):
-        return reduce(add, list(map(self.parse_cnf, clauses_list)))
+        return reduce(add, set(map(self.parse_cnf, clauses_list)))
 
     def parse_cnf(self, input_string):
         clauses_list = input_string.split(self.and_splitter)
-        return list(map(self.parse_clause, clauses_list))
+        return set(map(self.parse_clause, clauses_list))
 
     def parse_clause(self, input_string: str):
         input_string = self.strip_brackets(input_string)
         literals_list = input_string.split(self.or_splitter)
-        parsed_literals = list(map(self.parse_literal, literals_list))
+        parsed_literals = set(map(self.parse_literal, literals_list))
         return Clause(parsed_literals)
 
     def parse_literal(self, input_string):
@@ -52,6 +50,6 @@ class ClauseParser(NamedTuple):
     @staticmethod
     def parse_argument(input_string):
         if input_string[0].isupper():
-            return Constant(input_string, None)
+            return Argument(input_string, True)
 
-        return Variable(input_string, None)
+        return Argument(input_string, False)
