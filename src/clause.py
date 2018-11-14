@@ -30,7 +30,7 @@ def subsitute(clause: Clause, transformation: Dict[Argument, Argument]) -> Claus
     return clause
 
 
-def combine(clause_i: Clause, clause_j: Clause):
+def combine(clause_i: Clause, clause_j: Clause) -> Clause:
     """ Combines the given pair of clauses. It is equivalent to the or operation.
     It used mainly to reduce opposite literals.
 

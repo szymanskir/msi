@@ -56,6 +56,7 @@ def resolve(clause_i: Clause, clause_j: Clause) -> Set[Clause]:
 
     return resolvents
 
+
 def reduce_resolution_tree(resolution_tree: nx.classes.DiGraph):
     empty_clause: Clause = Clause(frozenset())
     change = True
