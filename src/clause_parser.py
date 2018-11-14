@@ -1,10 +1,11 @@
 from functools import reduce
-from operator import add, or_
+from operator import or_
 from typing import NamedTuple
 
-from clause import Clause
-from literal import Literal
-from argument import Argument
+from .argument import Argument
+from .clause import Clause
+from .literal import Literal
+
 
 class ClauseParser(NamedTuple):
     """Class responsible for parsing input data.
@@ -20,7 +21,7 @@ class ClauseParser(NamedTuple):
     def parse_cnf_list(self, clauses_list: list):
         """Parses list of sentences in CNF form.
         """
-        return reduce(or_,(map(self.parse_cnf, clauses_list)))
+        return reduce(or_, (map(self.parse_cnf, clauses_list)))
 
     def parse_cnf(self, input_string: str):
         """Parses single sentence in CNF form.

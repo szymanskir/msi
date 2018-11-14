@@ -1,9 +1,10 @@
 import pytest
 
 from src.argument import Argument
-from src.clause import Clause
+from src.clause_parser import ClauseParser
 from src.literal import Literal
 from src.resolution_method import *
+
 
 @pytest.mark.parametrize("clause_i, clause_j, expected_result", [
     (
@@ -92,5 +93,23 @@ def test_resolve(clause_i: Clause, clause_j: Clause, expected_result: Set[Clause
     )
 ])
 def test_resolution(knowledge_base: Set[Clause], thesis: Clause, expected_result: bool):
+    result, _ = resolution(knowledge_base, thesis)
+    assert result == expected_result
+
+
+@pytest.mark.parametrize("knowledge_base_input, thesis_input, expected_result", [
+    [
+        ["/PIES(x) OR WYJE(x)",
+         "/POSIADA(x,y) OR /KOT(y) OR /POSIADA(x,z) OR /MYSZ(z)",
+         "/KIEPSKO_SYPIA(x) OR /POSIADA(x,y) OR /WYJE(y)",
+         "POSIADA(Janek,x) AND [KOT(x) OR PIES(x))]"],
+        "/KIEPSKO_SYPIA(Janek) AND POSIADA(Janek,z) AND MYSZ(z)",
+        False
+    ]
+])
+def test_resolution_with_parser(knowledge_base_input, thesis_input, expected_result: bool):
+    clause_parser = ClauseParser()
+    knowledge_base = clause_parser.parse_cnf_list(knowledge_base_input)
+    thesis = clause_parser.parse_cnf(thesis_input)
     result, _ = resolution(knowledge_base, thesis)
     assert result == expected_result
