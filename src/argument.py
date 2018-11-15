@@ -2,5 +2,7 @@ from typing import NamedTuple
 
 
 class Argument(NamedTuple):
-    key: str
-    value: str
+    """ Class representing an argument of a Literal.
+    """
+    value: str = None
+    is_constant: bool = False
