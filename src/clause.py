@@ -9,9 +9,9 @@ class Clause(NamedTuple):
 
     def __repr__(self):
         if(not self.literals):
-            return "empty"
+            return "∅"
 
-        return ' v '.join([str(x) for x in self.literals])
+        return ' ∨ '.join([str(x) for x in self.literals])
 
 
 def negate_clause(clause: Clause) -> FrozenSet[Clause]:

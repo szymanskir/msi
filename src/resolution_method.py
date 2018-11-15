@@ -66,7 +66,7 @@ def _get_transformation_string_(transformation):
     if len(transformation) == 0:
         return ""
 
-    pairs = [f"{variable}: {value}" for variable,
+    pairs = [f"{variable}←{value}" for variable,
              value in transformation.items()]
     trans_str = ', '.join(pairs)
     return f"{{{trans_str}}}"
