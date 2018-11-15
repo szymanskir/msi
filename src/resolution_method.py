@@ -1,10 +1,9 @@
 from itertools import combinations
-from typing import Set, Tuple
+from typing import Set, Tuple, Dict
 import networkx as nx
-import matplotlib.pyplot as plt
-from networkx.drawing.nx_agraph import write_dot, graphviz_layout
 
 from .clause import Clause, negate_clause, subsitute, combine
+from .argument import Argument
 from .literal import find_transformation
 
 
@@ -27,7 +26,6 @@ def resolution(knowledge_base: Set[Clause], thesis: Set[Clause]) -> Tuple[bool, 
             resolution_tree.add_nodes_from(resolvents)
             if empty_clause in resolvents:
                 resolution_tree = reduce_resolution_tree(resolution_tree)
-                draw_resolution_tree(resolution_tree)
                 return (True, resolution_tree)
             new |= resolvents
         if new < clauses:
@@ -35,7 +33,7 @@ def resolution(knowledge_base: Set[Clause], thesis: Set[Clause]) -> Tuple[bool, 
         clauses |= new
 
 
-def resolve(clause_i: Clause, clause_j: Clause, resolution_tree) -> Set[Clause]:
+def resolve(clause_i: Clause, clause_j: Clause, resolution_tree=nx.DiGraph()) -> Set[Clause]:
     """Finds all resolvents for the given pair of clauses.
     """
     resolvents: Set[Clause] = set()
@@ -62,7 +60,7 @@ def resolve(clause_i: Clause, clause_j: Clause, resolution_tree) -> Set[Clause]:
     return resolvents
 
 
-def _get_transformation_string_(transformation):
+def _get_transformation_string_(transformation: Dict[Argument, Argument]):
     if len(transformation) == 0:
         return ""
 
@@ -82,34 +80,3 @@ def reduce_resolution_tree(resolution_tree: nx.classes.DiGraph):
         change = len(nodes_to_delete) > 0
         resolution_tree.remove_nodes_from(nodes_to_delete)
     return resolution_tree
-
-
-def draw_resolution_tree(tree, enable_edge_labels=True, rotate_edge_labels=False):
-    plt.figure()
-
-    # graph
-    nodes_pos = graphviz_layout(tree, prog='dot')
-    nx.draw(tree, nodes_pos,
-            node_size=150, edge_color='#7d7d7d')
-
-    # nodes labels
-    pos_attrs = {}
-    for node, coords in nodes_pos.items():
-        pos_attrs[node] = (coords[0], coords[1] - 6)
-
-    custom_node_attrs = {}
-    for node, attr in tree.nodes.items():
-        custom_node_attrs[node] = str(node)
-
-    nodes_bbox = dict(fc="w", lw=0.1)
-    nx.draw_networkx_labels(
-        tree, pos_attrs, labels=custom_node_attrs, font_size=10, bbox=nodes_bbox)
-
-    # edge labels
-    if(enable_edge_labels):
-        edges_pos = graphviz_layout(tree, prog='dot')
-        edge_labels = nx.get_edge_attributes(tree, 'transformation')
-        nx.draw_networkx_edge_labels(
-            tree, pos=edges_pos, edge_labels=edge_labels, font_size=10, rotate=rotate_edge_labels)
-
-    plt.show()
