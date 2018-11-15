@@ -99,12 +99,12 @@ def test_resolution(knowledge_base: Set[Clause], thesis: Clause, expected_result
 
 @pytest.mark.parametrize("knowledge_base_input, thesis_input, expected_result", [
     [
-        ["/PIES(x) OR WYJE(x)",
-         "/POSIADA(x,y) OR /KOT(y) OR /POSIADA(x,z) OR /MYSZ(z)",
-         "/KIEPSKO_SYPIA(x) OR /POSIADA(x,y) OR /WYJE(y)",
-         "POSIADA(Janek,x) AND [KOT(x) OR PIES(x))]"],
-        "KIEPSKO_SYPIA(Janek) AND POSIADA(Janek,z) AND MYSZ(z)",
-        False
+        ["~PIES(x) | WYJE(x)",
+         "~POSIADA(x,y) | ~KOT(y) | ~POSIADA(x,z) | ~MYSZ(z)",
+         "~KIEPSKO_SYPIA(x) | ~POSIADA(x,y) | ~WYJE(y)",
+         "POSIADA(Janek,x) & [KOT(x) | PIES(x))]"],
+        "KIEPSKO_SYPIA(Janek) & POSIADA(Janek,z) & MYSZ(z)",
+        True
     ]
 ])
 def test_resolution_with_parser(knowledge_base_input, thesis_input, expected_result: bool):

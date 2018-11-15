@@ -22,7 +22,7 @@ def test_strip_brackets(input_string, expected_result):
 
 
 @pytest.mark.parametrize("input_string, expected_result", [
-    ("/PIES(x)", Literal(True, (Argument("x", False),), "PIES")),
+    ("~PIES(x)", Literal(True, (Argument("x", False),), "PIES")),
     ("PIES(x,y)", Literal(False, (Argument("x", False), Argument("y", False)), "PIES"))
 ])
 def test_parse_literal(input_string, expected_result):
@@ -32,7 +32,7 @@ def test_parse_literal(input_string, expected_result):
 
 
 @pytest.mark.parametrize("input_string, expected_result", [
-    ("/PIES(x) OR KOT(y)", Clause(frozenset([
+    ("~PIES(x) | KOT(y)", Clause(frozenset([
         Literal(True, (Argument("x", False),), "PIES"),
         Literal(False, (Argument("y", False),), "KOT")
     ])))
