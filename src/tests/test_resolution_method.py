@@ -107,7 +107,7 @@ def test_resolution(knowledge_base: Set[Clause], thesis: Clause, expected_result
         ["~PIES(x) | WYJE(x)",
          "~POSIADA(x,y) | ~KOT(y) | ~POSIADA(x,z) | ~MYSZ(z)",
          "~KIEPSKO_SYPIA(x) | ~POSIADA(x,y) | ~WYJE(y)",
-         "POSIADA(Janek,x) & [KOT(x) | PIES(x))]"],
+         "POSIADA(Janek,x) & [KOT(x) | PIES(x)]"],
         "KIEPSKO_SYPIA(Janek) & POSIADA(Janek,z) & MYSZ(z)",
         True
     ]
