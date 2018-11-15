@@ -53,9 +53,9 @@ def resolve(clause_i: Clause, clause_j: Clause, resolution_tree) -> Set[Clause]:
                     if not resolution_tree.has_node(comb):
                         trans_str = _get_transformation_string_(transformation)
                         resolution_tree.add_edge(
-                            clause_i, comb, subst=trans_str)
+                            clause_i, comb, transformation=trans_str)
                         resolution_tree.add_edge(
-                            clause_j, comb, subst=trans_str)
+                            clause_j, comb, transformation=trans_str)
 
                     resolvents.add(comb)
 
@@ -84,7 +84,7 @@ def reduce_resolution_tree(resolution_tree: nx.classes.DiGraph):
     return resolution_tree
 
 
-def draw_resolution_tree(tree, enable_edge_labels=True):
+def draw_resolution_tree(tree, enable_edge_labels=True, rotate_edge_labels=False):
     plt.figure()
 
     # graph
@@ -108,8 +108,8 @@ def draw_resolution_tree(tree, enable_edge_labels=True):
     # edge labels
     if(enable_edge_labels):
         edges_pos = graphviz_layout(tree, prog='dot')
-        edge_labels = nx.get_edge_attributes(tree, 'subst')
+        edge_labels = nx.get_edge_attributes(tree, 'transformation')
         nx.draw_networkx_edge_labels(
-            tree, pos=edges_pos, edge_labels=edge_labels, font_size=10)
+            tree, pos=edges_pos, edge_labels=edge_labels, font_size=10, rotate=rotate_edge_labels)
 
     plt.show()
