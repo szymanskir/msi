@@ -1,11 +1,17 @@
-from clauseparser import ClauseParser
+from .clause_parser import ClauseParser
+from .resolution_method import resolution
 
-input_string = """/PIES(x) OR WYJE(x)
-/POSIADA(x,y) OR /KOT(y) OR /POSIADA(x,z) OR /MYSZ(z)
-/KIEPSKO_SYPIA(x) OR /POSIADA(x,y) OR /WYJE(y)
-POSIADA(Janek,x) AND [KOT(x) OR PIES(x))]
-/KIEPSKO_SYPIA(Janek) AND POSIADA(Janek,z) AND MYSZ(z)"""
+
+clauses_list = ["~PIES(x) | WYJE(x)",
+         "~POSIADA(x,y) | ~KOT(y) | ~POSIADA(x,z) | ~MYSZ(z)",
+         "~KIEPSKO_SYPIA(x) | ~POSIADA(x,y) | ~WYJE(y)",
+         "POSIADA(Janek,x) & [KOT(x) | PIES(x))]"]
+
+thesis_input="KIEPSKO_SYPIA(Janek) & POSIADA(Janek,z) & MYSZ(z)",
 
 clause_parser = ClauseParser()
-parsed_clauses = clause_parser.parse_cnf_list(input_string.split("\n"))
-print('\n'.join(' '.join(map(str, sl)) for sl in parsed_clauses))
+parsed_clauses = clause_parser.parse_cnf_list(clauses_list)
+parsed_thesis = clause_parser.parse_cnf(thesis_input)
+
+
+print(resolution(parsed_clauses, parsed_thesis))
