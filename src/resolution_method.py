@@ -1,10 +1,9 @@
 from itertools import combinations
-from typing import Set, Tuple
+from typing import Set, Tuple, Dict
 import networkx as nx
-import matplotlib.pyplot as plt
-from networkx.drawing.nx_agraph import write_dot, graphviz_layout
 
 from .clause import Clause, negate_clause, subsitute, combine
+from .argument import Argument
 from .literal import find_transformation
 
 
@@ -23,15 +22,10 @@ def resolution(knowledge_base: Set[Clause], thesis: Set[Clause]) -> Tuple[bool, 
     while True:
         new: Set[Clause] = set()
         for ci, cj in combinations(clauses, 2):
-            resolvents: Set[Clause] = resolve(ci, cj)
+            resolvents: Set[Clause] = resolve(ci, cj, resolution_tree)
             resolution_tree.add_nodes_from(resolvents)
-            resolution_tree.add_edges_from([(ci, r) for r in resolvents])
-            resolution_tree.add_edges_from([(cj, r) for r in resolvents])
             if empty_clause in resolvents:
                 resolution_tree = reduce_resolution_tree(resolution_tree)
-                pos = graphviz_layout(resolution_tree, prog='dot')
-                nx.draw(resolution_tree, pos, with_labels=True, arrows=True)
-                plt.show()
                 return (True, resolution_tree)
             new |= resolvents
         if new < clauses:
@@ -39,7 +33,7 @@ def resolution(knowledge_base: Set[Clause], thesis: Set[Clause]) -> Tuple[bool, 
         clauses |= new
 
 
-def resolve(clause_i: Clause, clause_j: Clause) -> Set[Clause]:
+def resolve(clause_i: Clause, clause_j: Clause, resolution_tree=nx.DiGraph()) -> Set[Clause]:
     """Finds all resolvents for the given pair of clauses.
     """
     resolvents: Set[Clause] = set()
@@ -52,9 +46,28 @@ def resolve(clause_i: Clause, clause_j: Clause) -> Set[Clause]:
                 else:
                     new_clause_i = subsitute(clause_i, transformation)
                     new_clause_j = subsitute(clause_j, transformation)
-                    resolvents.add(combine(new_clause_i, new_clause_j))
+
+                    comb = combine(new_clause_i, new_clause_j)
+                    if not resolution_tree.has_node(comb):
+                        trans_str = _get_transformation_string_(transformation)
+                        resolution_tree.add_edge(
+                            clause_i, comb, transformation=trans_str)
+                        resolution_tree.add_edge(
+                            clause_j, comb, transformation=trans_str)
+
+                    resolvents.add(comb)
 
     return resolvents
+
+
+def _get_transformation_string_(transformation: Dict[Argument, Argument]):
+    if len(transformation) == 0:
+        return ""
+
+    pairs = [f"{variable}←{value}" for variable,
+             value in transformation.items()]
+    trans_str = ', '.join(pairs)
+    return f"{{{trans_str}}}"
 
 
 def reduce_resolution_tree(resolution_tree: nx.classes.DiGraph):
@@ -62,7 +75,8 @@ def reduce_resolution_tree(resolution_tree: nx.classes.DiGraph):
     change = True
     while change:
         change = False
-        nodes_to_delete = [v for v in resolution_tree.nodes() if resolution_tree.out_degree(v) == 0 and v != empty_clause]
+        nodes_to_delete = [v for v in resolution_tree.nodes(
+        ) if resolution_tree.out_degree(v) == 0 and v != empty_clause]
         change = len(nodes_to_delete) > 0
         resolution_tree.remove_nodes_from(nodes_to_delete)
     return resolution_tree
