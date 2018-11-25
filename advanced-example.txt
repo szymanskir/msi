@@ -1,0 +1,11 @@
+BIEDNY(x) | ~ZDOLNY(x) | SZCZESLIWY(x)
+~CZYTA(y) | ZDOLNY(y)
+~SZCZESLIWY(z) | CIEKAWE(Z)
+[~CIEKAWE(a) | ZNAJOMI(a)] & [~CZYTA(a) | ZNAJOMI(a)]
+~ZNAJOMI(b) | SPOTYKA(b)
+~SPOTYKA(c) | SZCZESLIWY(c)
+~CZYTA(Jan) & ~BIEDNY(Jan)
+~CZYTA(Tomek) & BIEDNY(Tomek)
+~BIEDNY(Adam) & CZYTA(Adam)
+---
+~ZNAJOMI(x) | ~CZYTA(x) | ~ZDOLNY(x) | ~SZCZESLIWY(x)
