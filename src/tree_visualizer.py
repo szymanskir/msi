@@ -1,7 +1,6 @@
-from typing import Dict
 import matplotlib.pyplot as plt
 import networkx as nx
-from networkx.drawing.nx_agraph import write_dot, graphviz_layout
+from networkx.drawing.nx_agraph import graphviz_layout
 
 
 def display_resolution_tree(resolution_tree: nx.classes.DiGraph):
@@ -31,7 +30,7 @@ def _draw_resolution_tree_(tree: nx.classes.DiGraph, enable_edge_labels: bool = 
         tree, pos_attrs, labels=custom_node_attrs, font_size=10, bbox=nodes_bbox)
 
     # edge labels
-    if(enable_edge_labels):
+    if enable_edge_labels:
         edges_pos = graphviz_layout(tree, prog='dot')
         edge_labels = nx.get_edge_attributes(tree, 'transformation')
         nx.draw_networkx_edge_labels(
