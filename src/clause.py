@@ -7,7 +7,7 @@ from .literal import Literal, negate_literal, substitute_literal
 class Clause(NamedTuple):
     literals: FrozenSet[Literal]
 
-    def __repr__(self):
+    def __str__(self):
         if(not self.literals):
             return "∅"
 

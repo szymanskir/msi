@@ -10,7 +10,7 @@ class Literal(NamedTuple):
     arguments: Tuple[Argument, ...] = (Argument('X', True),)
     name: str = "literal"
 
-    def __repr__(self):
+    def __str__(self):
         literal_rep = '~' if self.is_negated else ''
         literal_rep += self.name
         literal_rep += f"({', '.join([str(x) for x in self.arguments])})"
