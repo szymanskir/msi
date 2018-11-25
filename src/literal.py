@@ -55,12 +55,18 @@ def find_transformation(literal1: Literal, literal2: Literal) -> Dict[Argument, 
             if literal1.arguments[idx].is_constant and literal2.arguments[idx].is_constant:
                 return None
             elif literal1.arguments[idx].is_constant:
+                if literal1.arguments[idx] in literal2.arguments:
+                    return None
                 replaced_variable = literal2.arguments[idx]
                 value = literal1.arguments[idx]
             elif literal2.arguments[idx].is_constant:
+                if literal2.arguments[idx] in literal1.arguments:
+                    return None
                 replaced_variable = literal1.arguments[idx]
                 value = literal2.arguments[idx]
             else:
+                if literal2.arguments[idx] in literal1.arguments:
+                    return None
                 replaced_variable = literal1.arguments[idx]
                 value = literal2.arguments[idx]
             transformation[replaced_variable] = value
