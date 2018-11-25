@@ -19,19 +19,19 @@ def _draw_resolution_tree_(tree: nx.classes.DiGraph, enable_edge_labels: bool = 
     # nodes labels
     pos_attrs = {}
     for node, coords in nodes_pos.items():
-        pos_attrs[node] = (coords[0], coords[1] - 6)
+        pos_attrs[node] = (coords[0], coords[1] - 10)
 
     custom_node_attrs = {}
     for node, attr in tree.nodes.items():
         custom_node_attrs[node] = str(node)
 
-    nodes_bbox = dict(fc="w", lw=0.1)
+    nodes_bbox = dict(facecolor="w", edgecolor="#d3d3d3", pad=6, lw=0.1)
     nx.draw_networkx_labels(
-        tree, pos_attrs, labels=custom_node_attrs, font_size=10, bbox=nodes_bbox)
+        tree, pos_attrs, labels=custom_node_attrs, font_size=13, bbox=nodes_bbox)
 
     # edge labels
     if enable_edge_labels:
         edges_pos = graphviz_layout(tree, prog='dot')
         edge_labels = nx.get_edge_attributes(tree, 'transformation')
         nx.draw_networkx_edge_labels(
-            tree, pos=edges_pos, edge_labels=edge_labels, font_size=10, rotate=rotate_edge_labels)
+            tree, pos=edges_pos, edge_labels=edge_labels, font_size=13, rotate=rotate_edge_labels)
