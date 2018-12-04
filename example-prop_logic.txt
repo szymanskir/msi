@@ -1,0 +1,5 @@
+KLASYCZNA(Asia) | JAZZ(Asia)
+~KLASYCZNA(Asia) | WYRAFINOWANA(Asia)
+~JAZZ(Asia)
+---
+~WYRAFINOWANA(Asia)
